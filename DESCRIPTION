@@ -1,0 +1,27 @@
+Package: webutils
+Type: Package
+Title: Functions for Accessing the Web
+Description: Functions useful for accessing Github via their API, along with a few other functions helpful for working on the web.
+Version: 0.1.0
+Date: 2022-05-03
+Authors@R: c(
+    person("Bryan A.", "Hanson",
+      role = c("aut", "cre"), email =
+      "hanson@depauw.edu",
+      comment = c(ORCID = "0000-0003-3536-8246")))
+License: GPL-3
+Imports:
+  httr,
+  jsonlite,
+  lubridate,
+  xml2,
+  stringr
+Suggests:
+  tinytest,
+  roxut
+Encoding: UTF-8
+RoxygenNote: 7.1.2
+Roxygen: list(packages = "roxut", roclets = c("namespace", "rd", "roxut::tests_roclet"), markdown = TRUE)
+URL: https://bryanhanson.github.io/ghutils/
+BugReports: https://github.com/bryanhanson/ghutils/issues
+ByteCompile: TRUE
