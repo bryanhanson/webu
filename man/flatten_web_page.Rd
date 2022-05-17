@@ -11,9 +11,11 @@ flatten_web_page(url)
 }
 \value{
 A character vector containing the contents of the web page (xml is stripped out).
+Lines containing only whitespace + newlines are removed as well.
 }
 \description{
 Convert a web page to a simple character vector which is fast to search.
+If looking for something specific use the methods in \code{rvest}.
 }
 \examples{
 url <- "https://chemospec.org/posts/2020-01-01-Intro-F4S/2021-01-01-Intro-F4S.html"

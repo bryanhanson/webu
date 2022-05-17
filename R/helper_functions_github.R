@@ -1,6 +1,5 @@
 
-### Helper Functions
-### Not exported, no Rd file
+##### Helper Functions for Working with Github
 
 #' Report if there are rate-limit issues
 #' There is a limit of how often you can hit GH:
@@ -9,7 +8,7 @@
 #' @importFrom jsonlite fromJSON
 #' @noRd
 #'
-.reportAccessIssue <- function(response) {
+.report_github_access_issue <- function(response) {
   # https://docs.github.com/en/rest/reference/rate-limit
   message("\nI tried: ", response$url)
   cat("API access type:", response$headers$"x-ratelimit-resource", "\n")
@@ -25,28 +24,28 @@
 #' Get the results of an access attempt
 #' @noRd
 #'
-.checkAccess <- function(j) {
+.check_github_access <- function(j) {
   return(j$message)
 }
 
 #' Get the commit date
 #' @noRd
 #'
-.commitDate <- function(j) {
+.get_github_commit_date <- function(j) {
   return(j$commit$author$date)
 }
 
 #' Get the issue date
 #' @noRd
 #'
-.issueDate <- function(j) {
+.get_github_issue_date <- function(j) {
   return(j$updated_at)
 }
 
 #' Extract fields
 #' @noRd
 #'
-.extractFields <- function(x) {
+.extract_github_fields <- function(x) {
   ni <- lengths(x["items"])
   DF <- data.frame(name = NA, description = NA, repository = NA)
   # sometimes length(x[[3]]) comes back as zero, so skip it
@@ -65,7 +64,7 @@
 #' @importFrom stringr str_extract_all str_extract
 #' @noRd
 #'
-.getPageCount <- function(response) {
+.get_github_page_count <- function(response) {
   link <- headers(response)$link
   pages <- unlist(stringr::str_extract_all(link, "page=[0-9]+"))
   last_page <- pages[length(pages)]
@@ -81,7 +80,7 @@
 #' @importFrom httr authenticate add_headers
 #' @noRd
 #'
-.getResponse <- function(topic, pg, username, token) {
+.get_github_response <- function(topic, pg, username, token) {
   # Set up query string (https://stackoverflow.com/a/48412541/633251)
   q_string <- paste0(
     "https://api.github.com/search/repositories?q=topic:", topic,
@@ -94,19 +93,75 @@
   ))
 }
 
-#' Process a Response
+#' Process a Response from Github
 #'
 #' @importFrom httr content
 #' @importFrom jsonlite fromJSON
 #' @noRd
 #'
-.processResponse <- function(response) {
+.process_github_response <- function(response) {
   json <- content(response, "text")
   json <- jsonlite::fromJSON(json, simplifyVector = FALSE) # returns a list
-  if (!is.null(.checkAccess(json))) {
-    .reportAccessIssue(response)
+  if (!is.null(.check_github_access(json))) {
+    .report_github_access_issue(response)
     stop("Github access rate exceeded, try again later")
   }
 
-  ans <- .extractFields(json)
+  ans <- .extract_github_fields(json)
+}
+
+#'
+#' Search All Github Repositories for Topics of Interest
+#'
+#' @param topics Character.  Strings to search on Github.
+#'        Currently, only a single topic like "NMR" can be used.  Although the
+#'        Github documentation implies that a Boolean query string such as
+#'        "NMR+OR+IR" can be used, I cannot make it work.
+#' @param username Character.  Github username.
+#' @param token Character.  Github authentification token.
+#' @return Data frame.
+#'
+#' @author Bryan A. Hanson
+#' @noRd
+#'
+.search_github_repos <- function(topics, username, token) {
+  DF <- data.frame(name = NA, desc = NA, url = NA)
+
+  for (i in 1:length(topics)) {
+    DF2 <- .search_github_topic(topics[i], username, token)
+    DF <- rbind(DF, DF2)
+  }
+
+  DF <- unique(DF[2:nrow(DF), ])
+  DF <- DF[-1, ]
+}
+
+#'
+#' Search for Topics on Github
+#'
+#' Search Github for topics.
+#'
+#' @param topic Character.  Length one.
+#'        Currently, only a single topic like "NMR" can be used.  Although the
+#'        Github documentation implies that a Boolean query string such as
+#'        "NMR+OR+IR" can be used, I cannot make it work.
+#' @param username Character.  Github username.
+#' @param token Character.  Github authentification token.
+#' @return Data frame.
+#'
+#' @author Bryan A. Hanson
+#' @noRd
+#'
+.search_github_topic <- function(topic, username, token) {
+  DF <- data.frame(name = NA, description = NA, repository = NA)
+  resp <- .get_github_response(topic, pg = 1, username, token) # get the first page
+  DF <- rbind(DF, .process_github_response(resp))
+  pgs <- .get_github_page_count(resp) # find out how many page(s) total are available
+  if (!is.null(pgs)) {
+    for (i in 2:pgs) { # get the rest of the pages
+      resp <- .get_github_response(topic, pg = i, token)
+      DF <- rbind(DF, .process_github_response(resp))
+    }
+  }
+  DF[-1, ]
 }

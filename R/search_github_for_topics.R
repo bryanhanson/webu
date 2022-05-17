@@ -23,7 +23,7 @@ search_github_for_topics <- function(topics = NULL, browse = FALSE, username = N
 
   chk <- check_for_github_token(token)
   # Search Github and remove packages already known to us
-  res <- .search_gh_repos(topics, username, token)
+  res <- .search_github_repos(topics, username, token)
 
   # Open the pages in a browser
   if (browse) {

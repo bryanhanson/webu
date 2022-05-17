@@ -27,8 +27,8 @@ get_github_dates <- function(url, what = "commits") { # url not vectorized
     return(NA_character_)
   }
   if (!what %in% c("commits", "issues")) stop("'what' should be either 'commits' or 'issues'")
-  if (what == "commits") func <- .commitDate
-  if (what == "issues") func <- .issueDate
+  if (what == "commits") func <- .get_github_commit_date
+  if (what == "issues") func <- .get_github_issue_date
 
   # Prep the access string
   splitURL <- unlist(strsplit(url, "/"))
@@ -46,8 +46,8 @@ get_github_dates <- function(url, what = "commits") { # url not vectorized
   response <- GET(gh_string)
   json <- content(response, "text")
   json <- fromJSON(json, simplifyVector = FALSE) # returns a list
-  if (!is.null(.checkAccess(json))) {
-    .reportAccessIssue(response)
+  if (!is.null(.check_github_access(json))) {
+    .report_github_access_issue(response)
     stop("Github access rate exceeded, try again later")
   }
   alldates <- unlist(lapply(json, func))

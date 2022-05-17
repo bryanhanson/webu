@@ -6,8 +6,8 @@
 \alias{webutils}
 \title{Functions for Accessing the Web}
 \description{
-Functions useful for accessing Github via the API, along with a few other
-functions helpful for working on the web.
+Functions useful for accessing Github and PyPi via the API, along with
+a few other functions helpful for working on the web.
 }
 \author{
 Bryan A. Hanson

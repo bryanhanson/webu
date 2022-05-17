@@ -1,9 +1,9 @@
 Package: webutils
 Type: Package
 Title: Functions for Accessing the Web
-Description: Functions useful for accessing Github via their API, along with a few other functions helpful for working on the web.
-Version: 0.1.0
-Date: 2022-05-03
+Description: Functions useful for accessing Github and PyPi via the API, along with a few other functions helpful for working on the web.
+Version: 0.2.0
+Date: 2022-05-17
 Authors@R: c(
     person("Bryan A.", "Hanson",
       role = c("aut", "cre"), email =
@@ -15,7 +15,9 @@ Imports:
   jsonlite,
   lubridate,
   xml2,
-  stringr
+  stringr,
+  rvest,
+  magrittr
 Suggests:
   tinytest,
   roxut
