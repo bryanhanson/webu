@@ -6,8 +6,10 @@
 #'
 #' @noRd
 #'
-.setup_data_frame <- function() {
-  DF <- data.frame(name = NA, description = NA, repository = NA, author_email = NA, maintainer_email = NA)
+.setup_data_frame <- function(author = TRUE) {
+  if (!author) DF <- data.frame(name = NA, description = NA, repository = NA, maintainer_email = NA)
+  if (author) DF <- data.frame(name = NA, description = NA, repository = NA, author_email = NA, maintainer_email = NA)
+  DF
 }
 
 

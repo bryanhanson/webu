@@ -47,13 +47,13 @@
 #'
 .extract_github_fields <- function(x) {
   ni <- lengths(x["items"])
-  DF <- data.frame(name = NA, description = NA, repository = NA)
+  DF <- .setup_data_frame(author = FALSE)
   # sometimes length(x[[3]]) comes back as zero, so skip it
   # this occurs as the last page on some queries
   for (i in 1:ni) {
     if (length(x[[3]]) == 0L) break
     tmp <- unlist(x[[3]][[i]][c("name", "description", "html_url")], use.names = FALSE)
-    DF <- rbind(DF, tmp)
+    DF <- rbind(DF, c(tmp, NA_character_)) # NA is for the maintainer e-mail (not yet implemented)
   }
   DF[2:nrow(DF), ]
 }
@@ -119,13 +119,19 @@
 #'        "NMR+OR+IR" can be used, I cannot make it work.
 #' @param username Character.  Github username.
 #' @param token Character.  Github authentification token.
-#' @return Data frame.
+#' @return Invisibly, a data frame containing the repo data.  Elements are:
+#' \itemize{
+#'   \item name  Name of the project.
+#'   \item description Short summary of the project.
+#'   \item repository The url to the repository on Github.
+#'   \item maintainer_email E-mail of the maintainer, if we can figure it out.
+#' }
 #'
 #' @author Bryan A. Hanson
 #' @noRd
 #'
 .search_github_repos <- function(topics, username, token) {
-  DF <- data.frame(name = NA, desc = NA, url = NA)
+  DF <- .setup_data_frame(author = FALSE)
 
   for (i in 1:length(topics)) {
     DF2 <- .search_github_topic(topics[i], username, token)
@@ -134,6 +140,7 @@
 
   DF <- unique(DF[2:nrow(DF), ])
   DF <- DF[-1, ]
+  invisible(DF)
 }
 
 #'
@@ -153,7 +160,7 @@
 #' @noRd
 #'
 .search_github_topic <- function(topic, username, token) {
-  DF <- data.frame(name = NA, description = NA, repository = NA)
+  DF <- .setup_data_frame(author = FALSE)
   resp <- .get_github_response(topic, pg = 1, username, token) # get the first page
   DF <- rbind(DF, .process_github_response(resp))
   pgs <- .get_github_page_count(resp) # find out how many page(s) total are available

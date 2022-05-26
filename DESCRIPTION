@@ -1,4 +1,4 @@
-Package: webutils
+Package: webu
 Type: Package
 Title: Functions for Accessing the Web
 Description: Functions useful for accessing Github and PyPi via the API, along with a few other functions helpful for working on the web.
@@ -22,8 +22,8 @@ Suggests:
   tinytest,
   roxut
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Roxygen: list(packages = "roxut", roclets = c("namespace", "rd", "roxut::tests_roclet"), markdown = TRUE)
-URL: https://bryanhanson.github.io/ghutils/
-BugReports: https://github.com/bryanhanson/ghutils/issues
+URL: https://bryanhanson.github.io/webu/
+BugReports: https://github.com/bryanhanson/webu/issues
 ByteCompile: TRUE
