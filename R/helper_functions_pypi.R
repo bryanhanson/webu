@@ -41,6 +41,8 @@
 #'
 #' Run a Query on PyPi for a Topic
 #'
+#' See https://warehouse.pypa.io/api-reference/index.html for the user_agent argument
+#'
 #' @param topic Character. Length one string.
 #' @param pg Integer.  The page number of the web page containing responses.
 #' @return The result of `GET`, class `response`.
@@ -52,7 +54,7 @@
 .get_pypi_response <- function(topic, pg) {
   # need to encode in case there are spaces and other special characters
   q_string <- URLencode(paste0("https://pypi.org/search/?q=", topic, "&page=", pg))
-  response <- GET(q_string)
+  response <- GET(q_string, user_agent = "Bryan Hanson reach me via hanson at depauw.edu")
 }
 
 #'
