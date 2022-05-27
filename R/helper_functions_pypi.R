@@ -46,10 +46,12 @@
 #' @return The result of `GET`, class `response`.
 #' 
 #' @author Bryan A. Hanson
+#' @importFrom utils URLencode
 #' @noRd
 #'
 .get_pypi_response <- function(topic, pg) {
-  q_string <- paste0("https://pypi.org/search/?q=", topic, "&page=", pg)
+  # need to encode in case there are spaces and other special characters
+  q_string <- URLencode(paste0("https://pypi.org/search/?q=", topic, "&page=", pg))
   response <- GET(q_string)
 }
 
