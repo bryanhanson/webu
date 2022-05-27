@@ -34,7 +34,10 @@ search_pypi_for_topics <- function(topics = NULL, browse = FALSE) {
   for (i in 1:length(topics)) {
     tmp <- .search_pypi_topic(topics[i])
     DF <- rbind(DF, tmp)
-    if (i != length(topics)) message("\n\nGiving the server a 15 second courtesy break...\n")
+    if (i != length(topics)) {
+      message("\n\nGiving the server a 30 second courtesy break...\n")
+      Sys.sleep(30)
+    }
   }
   DF <- DF[-1,]
   # Optionally open the pages in a browser
