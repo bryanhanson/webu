@@ -21,12 +21,10 @@ limits to the rate at which you can search.
 
 One first needs to create an "app" at Github following the instructions
 \href{https://github.com/settings/developers}{here}.
-Then do the following steps:
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{library("httr")
+Then do the following steps:\preformatted{library("httr")
 myapp <- oauth_app("app_name", key = "app_key", secret = "app_secret")
 github_token <- oauth2.0_token(oauth_endpoints("github"), myapp)
-}\if{html}{\out{</div>}}
+}
 }
 
 \author{

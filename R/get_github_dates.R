@@ -11,7 +11,7 @@
 #' @author Bryan A. Hanson
 #' @importFrom httr GET content
 #' @importFrom jsonlite fromJSON
-#' @importFrom lubridate ymd_hms date
+#' @importFrom lubridate ymd_hms ymd date
 #' @export
 #'
 #' @examples
